@@ -4,9 +4,9 @@ export default class Example extends Phaser.Scene {
     super('Example');
   }
   preload() {
-    this.load.image('Fondo', 'assets/Fondo.png');
+    this.load.image('Board', 'assets/Board.png');
   }
   create() {
-    var Fondo = this.add.image(400, 250, 'Fondo');
+    var Fondo = this.add.image(400, 250, 'Board');
   }
 }
