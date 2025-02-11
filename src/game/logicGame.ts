@@ -14,9 +14,9 @@ export default class logicGame {
     //Marco en el tablero logico en laposicion correspondente
     this.board[position] = this.currentPlayer;
     //Cambio la marca o simbolo para el siguiente jugador
-    this.currentPlayer = 'X' ? (this.currentPlayer = 'O') : (this.currentPlayer = 'X');
+    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
     //Devuelvo la marca que se acaba de colocar
-    return (this.currentPlayer = 'X' ? 'O' : 'X');
+    return this.currentPlayer === 'X' ? 'O' : 'X';
   }
 
   Winner() {
