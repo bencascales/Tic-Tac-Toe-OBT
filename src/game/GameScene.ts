@@ -42,7 +42,10 @@ export default class GameScene extends Phaser.Scene {
         cell.setInteractive();
 
         // Al presionar la celda llama al metodo presionar celda y le pasa su fila y columna
-        cell.on('pointerdown', () => this.onPressCell(row, col));
+        cell.on('pointerdown', () => {
+          this.onPressCell(row, col);
+          cell.destroy();
+        });
       }
     }
   }
