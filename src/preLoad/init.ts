@@ -23,6 +23,18 @@ export default class init extends Phaser.Scene {
   }
 
   chooseSymbol() {
+    this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY - 250,
+        'Choose one symbol to start',
+        {
+          fontSize: '100px',
+          color: '#000000',
+          align: 'center',
+        },
+      )
+      .setOrigin(0.5);
     const oButton = this.add
       .image(this.cameras.main.centerX + 300, this.cameras.main.centerY, 'O')
       .setInteractive();
