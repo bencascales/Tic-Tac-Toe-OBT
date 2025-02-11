@@ -21,28 +21,27 @@ export default class GameScene extends Phaser.Scene {
     this.load.audio('Tap', 'assets/Tap.mp3');
   }
   create() {
-    const Board = this.add.image(400, 400, 'Board').setDisplaySize(450, 450); // setDisplaySize(cellSize X 9,cellSize X 9)
+    const Board = this.add
+      .image(this.cameras.main.centerX, this.cameras.main.centerY, 'Board')
+      .setDisplaySize(this.cellSize * 3, this.cellSize * 3);
     this.images.push(Board);
     this.DrawGrill();
   }
 
   DrawGrill() {
     const gridSize = 3; // dimension de la grilla 3x3,
+    const boardX = this.cameras.main.centerX - this.cellSize * 1.5; // La posición X del tablero (centrado)
+    const boardY = this.cameras.main.centerY - this.cellSize * 1.5; // La posición Y del tablero (centrado)
 
     // Defino grilla
     for (let row = 0; row < gridSize; row++) {
       for (let col = 0; col < gridSize; col++) {
-        const xAxis = row * this.cellSize + 200; // Posicion en el eje de las X
-        const yAxis = col * this.cellSize + 200; // Posicion en el eje de las Y
+        const xAxis = boardX + row * this.cellSize + this.cellSize / 2; // Posición X de la celda
+        const yAxis = boardY + col * this.cellSize + this.cellSize / 2; // Posición Y de la celda
 
         // Crear una celda en la posicion x, y
 
-        const cell = this.add.zone(
-          xAxis + this.cellSize / 2,
-          yAxis + this.cellSize / 2,
-          this.cellSize,
-          this.cellSize,
-        );
+        const cell = this.add.zone(xAxis, yAxis, this.cellSize, this.cellSize);
         cell.setInteractive();
 
         // Al presionar la celda llama al metodo presionar celda y le pasa su fila y columna
@@ -60,7 +59,17 @@ export default class GameScene extends Phaser.Scene {
     this.sound.add('Tap').play();
     //Crea la imagen de la marca del jugador (X o O)
     const symbol = this.add
-      .image(cellRow * this.cellSize + 10, cellCol * this.cellSize + 10, currentPlayer)
+      .image(
+        this.cameras.main.centerX -
+          this.cellSize * 1.5 +
+          cellRow * this.cellSize +
+          this.cellSize / 2,
+        this.cameras.main.centerY -
+          this.cellSize * 1.5 +
+          cellCol * this.cellSize +
+          this.cellSize / 2,
+        currentPlayer,
+      )
       .setDisplaySize(this.cellSize, this.cellSize);
     //Agrego la marca o simbolo al arreglo con las imagenes
     this.images.push(symbol);
