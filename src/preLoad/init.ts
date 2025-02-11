@@ -30,18 +30,21 @@ export default class init extends Phaser.Scene {
       .image(this.cameras.main.centerX - 300, this.cameras.main.centerY, 'X')
       .setInteractive();
     oButton.on('pointerdown', () => {
-      this.sound.add('Tap').play();
       oButton.destroy();
       xButton.destroy();
-      this.scene.add('GameScene', new GameScene('O'));
-      this.scene.start('GameScene');
+      this.onPressSymbol('O');
     });
     xButton.on('pointerdown', () => {
-      this.sound.add('Tap').play();
       oButton.destroy();
       xButton.destroy();
-      this.scene.add('GameScene', new GameScene('X'));
-      this.scene.start('GameScene');
+      this.onPressSymbol('X');
     });
+  }
+
+  onPressSymbol(symbol: 'X' | 'O') {
+    this.sound.add('Tap').play();
+    this.scene.add('GameScene', new GameScene(symbol));
+    this.scene.start('GameScene');
+    this.scene.remove();
   }
 }

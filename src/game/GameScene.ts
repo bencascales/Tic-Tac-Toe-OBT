@@ -1,5 +1,6 @@
 import 'phaser';
 import logicGame from './logicGame';
+import EndGameScene from './EndGameScene';
 
 export default class GameScene extends Phaser.Scene {
   private gamelogic: logicGame; // Logica del Tic Tac Toe
@@ -61,6 +62,7 @@ export default class GameScene extends Phaser.Scene {
     const symbol = this.add
       .image(cellRow * this.cellSize + 10, cellCol * this.cellSize + 10, currentPlayer)
       .setDisplaySize(this.cellSize, this.cellSize);
+    //Agrego la marca o simbolo al arreglo con las imagenes
     this.images.push(symbol);
     //La hago invisible de entrada
     symbol.setAlpha(0);
@@ -76,15 +78,21 @@ export default class GameScene extends Phaser.Scene {
   }
   GameState() {
     const gameState = this.gamelogic.Winner();
-    // Pregunto si fue un empate
-    if (gameState === 'E') {
-      return;
-    }
     // Pregunto si el juego puede seguir ya que si no hay ganador y no hay empate entonces devuelve ''
     if (gameState === '') {
       return;
     }
-    this.sound.add('Win').play();
-    //Si llega aqui es que hubo un ganador
+    // Pregunto si fue un empate
+    if (gameState !== 'E') {
+      //Si no es un empate entonces es una victoria
+      this.sound.add('Win').play();
+    }
+    this.DestroyImages();
+    this.scene.add('EndGameScene', new EndGameScene(gameState));
+    this.scene.start('EndGameScene');
+    this.scene.remove();
+  }
+  DestroyImages() {
+    this.images.forEach((image) => image.destroy());
   }
 }
