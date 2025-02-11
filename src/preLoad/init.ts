@@ -11,7 +11,10 @@ export default class init extends Phaser.Scene {
     this.load.audio('Tap', 'assets/Tap.mp3');
   }
   create() {
-    const playButton = this.add.image(400, 250, 'Play').setInteractive();
+    const playButton = this.add
+      .image(this.cameras.main.centerX, this.cameras.main.centerY, 'Play')
+      .setDisplaySize(400, 400)
+      .setInteractive();
     playButton.on('pointerdown', () => {
       this.sound.add('Tap').play();
       playButton.destroy();
@@ -20,8 +23,12 @@ export default class init extends Phaser.Scene {
   }
 
   chooseSymbol() {
-    const oButton = this.add.image(600, 250, 'O').setInteractive();
-    const xButton = this.add.image(200, 250, 'X').setInteractive();
+    const oButton = this.add
+      .image(this.cameras.main.centerX + 300, this.cameras.main.centerY, 'O')
+      .setInteractive();
+    const xButton = this.add
+      .image(this.cameras.main.centerX - 300, this.cameras.main.centerY, 'X')
+      .setInteractive();
     oButton.on('pointerdown', () => {
       this.sound.add('Tap').play();
       oButton.destroy();
