@@ -4,11 +4,13 @@ import logicGame from './logicGame';
 export default class GameScene extends Phaser.Scene {
   private gamelogic: logicGame; // Logica del Tic Tac Toe
   private cellSize: number; // Tamaño las celdas
+  private images: Phaser.GameObjects.Image[]; // Almacen de las imagenes
 
   constructor(firstSymbol: 'X' | 'O') {
     super('GameScene');
     this.gamelogic = new logicGame(firstSymbol);
     this.cellSize = 150;
+    this.images = [];
   }
   preload() {
     this.load.image('Board', 'assets/Board.png');
@@ -19,6 +21,7 @@ export default class GameScene extends Phaser.Scene {
   }
   create() {
     const Board = this.add.image(400, 400, 'Board').setDisplaySize(450, 450); // setDisplaySize(cellSize X 9,cellSize X 9)
+    this.images.push(Board);
     this.DrawGrill();
   }
 
@@ -54,16 +57,20 @@ export default class GameScene extends Phaser.Scene {
     //Realizo la juagada y obtengo que jugador fue. Para esto calcula la posicion de la celda
     const currentPlayer = this.gamelogic.PlayTurn(3 * cellRow + cellCol);
     this.sound.add('Tap').play();
-    //Pregunto que jugador fue quien jugo y dibujo su respectiva marca o simbolo
-    if (currentPlayer === 'X') {
-      const X = this.add
-        .image(cellRow * this.cellSize + 10, cellCol * this.cellSize + 10, 'X')
-        .setDisplaySize(this.cellSize, this.cellSize);
-    } else {
-      const O = this.add
-        .image(cellRow * this.cellSize + 10, cellCol * this.cellSize + 10, 'O')
-        .setDisplaySize(this.cellSize, this.cellSize);
-    }
+    //Crea la imagen de la marca del jugador (X o O)
+    const symbol = this.add
+      .image(cellRow * this.cellSize + 10, cellCol * this.cellSize + 10, currentPlayer)
+      .setDisplaySize(this.cellSize, this.cellSize);
+    this.images.push(symbol);
+    //La hago invisible de entrada
+    symbol.setAlpha(0);
+    //Agrego el efecto de aparecer de las X y O
+    this.tweens.add({
+      targets: symbol,
+      alpha: 1,
+      duration: 500,
+      ease: 'Power2',
+    });
     // Miro el estado del juego por si se acaba o no
     this.GameState();
   }
