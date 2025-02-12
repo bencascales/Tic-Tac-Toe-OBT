@@ -19,6 +19,13 @@ export default class logicGame {
     return this.currentPlayer === 'X' ? 'O' : 'X';
   }
 
+  SkipTurn() {
+    //Cambio la marca o simbolo para el siguiente jugador
+    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+    //Devuelvo la marca del jugador que corresponde jugar
+    return this.currentPlayer;
+  }
+
   Winner() {
     const posisibleWinningCombinations = [
       [0, 1, 2], // Fila 1
