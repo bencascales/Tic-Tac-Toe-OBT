@@ -6,12 +6,14 @@ export default class GameScene extends Phaser.Scene {
   private gamelogic: logicGame; // Logica del Tic Tac Toe
   private cellSize: number; // Tamaño las celdas
   private images: Phaser.GameObjects.Image[]; // Almacen de las imagenes
+  private countdownTime: number; // Tiempo en segundos
 
   constructor(firstSymbol: 'X' | 'O') {
     super('GameScene');
     this.gamelogic = new logicGame(firstSymbol);
     this.cellSize = 150;
     this.images = [];
+    this.countdownTime = 0;
   }
   preload() {
     this.load.image('Board', 'assets/Board.png');
@@ -25,7 +27,43 @@ export default class GameScene extends Phaser.Scene {
       .image(this.cameras.main.centerX, this.cameras.main.centerY, 'Board')
       .setDisplaySize(this.cellSize * 3, this.cellSize * 3);
     this.images.push(Board);
+    const countdownText = this.add.text(
+      this.cameras.main.centerX,
+      50,
+      `Tiempo: ${this.countdownTime}`,
+      {
+        font: '32px Arial',
+        color: '#000000',
+      },
+    );
+    countdownText.setOrigin(0.5);
+
+    // Comienza el temporizador de la cuenta atrás
+    this.startCountdown(countdownText);
     this.DrawGrill();
+  }
+
+  startCountdown(countdownText: Phaser.GameObjects.Text) {
+    this.countdownTime = 30; // Tiempo
+    countdownText.setText(`Tiempo: ${this.countdownTime}`);
+
+    const countdownEvent = this.time.addEvent({
+      delay: 1000, // Despues de 1 segundo ejecuta callback (esta en ms por eso 1000)
+      callback: () => this.updateCountdown(countdownText, countdownEvent),
+      callbackScope: this,
+      loop: true, // Bucle asi ejecute callback cada segundo y no solo una vez
+    });
+  }
+
+  updateCountdown(countdownText: Phaser.GameObjects.Text, countdownEvent: Phaser.Time.TimerEvent) {
+    this.countdownTime--;
+    countdownText.setText(`Tiempo: ${this.countdownTime}`);
+
+    if (this.countdownTime <= 0) {
+      countdownEvent.remove();
+      this.startCountdown(countdownText);
+      this.gamelogic.SkipTurn();
+    }
   }
 
   DrawGrill() {
@@ -82,6 +120,8 @@ export default class GameScene extends Phaser.Scene {
       duration: 500,
       ease: 'Power2',
     });
+    //Reseteo timer
+    this.countdownTime = 30;
     // Miro el estado del juego por si se acaba o no
     this.GameState();
   }
